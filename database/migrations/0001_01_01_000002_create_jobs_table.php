@@ -4,6 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
+
+##creates job-related tables used by Laravel’s Queue system.   job is a background task,  Sending emails,  Processing files  , Running heavy calculations, Notifications
+
+##Instead of slowing the user request, Laravel queues these tasks.
+
+##Instead of making the user wait while these tasks run, Laravel queues them to execute in the background.
+
 return new class extends Migration
 {
     /**
@@ -11,15 +19,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        //Stores individual queued jobs.
+
+
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('queue')->index();
-            $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
+            $table->string('queue')->index();//queue name
+            $table->longText('payload');  //job data
+            $table->unsignedTinyInteger('attempts');   //retry attempts
+            $table->unsignedInteger('reserved_at')->nullable();   //time reserve
+            $table->unsignedInteger('available_at');  //when it is availbel
+            $table->unsignedInteger('created_at');  //creates time stamps
         });
+            // Stores batch jobs, if multiple jobs are grouped
 
         Schema::create('job_batches', function (Blueprint $table) {
             $table->string('id')->primary();
@@ -34,6 +47,9 @@ return new class extends Migration
             $table->integer('finished_at')->nullable();
         });
 
+
+        //Stores jobs that fail after retries.
+
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
@@ -47,6 +63,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     * 
+     * for rollback;- drops all three tables when roll back.
      */
     public function down(): void
     {

@@ -11,6 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /**This table stores:
+
+Admin users
+
+Login credentials
+
+Authentication data
+
+Columns:
+
+id → primary key
+
+name, email
+
+password
+
+remember_token → “Remember me” login
+
+timestamps → created_at / updated_at
+         */
+
+         
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -21,11 +43,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
+
+        ##don’t touch this now.
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
+
+
+        ## for now session is created in local file not in database so no use
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
@@ -47,3 +75,6 @@ return new class extends Migration
         Schema::dropIfExists('sessions');
     }
 };
+
+
+##This is the default Laravel migration file.
